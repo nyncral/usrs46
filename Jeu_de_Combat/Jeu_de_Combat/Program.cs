@@ -105,9 +105,17 @@ namespace Jeu_de_Combat
                 }
             }
 
+            ForceReload();
+
+            Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight / 2 - 4);
+            List<List<string>> classes = new List<List<string>>();
+            classes.Add(new List<string>() { "Classes : ", "Healer", "Tank", "Damager", "Vampire" });
+            classes.Add(new List<string>() { "Attaque :", "1 dégât", "1 dégât", "2 dégâts", "2 dégâts" });
+            classes.Add(new List<string>() { "PV", "8HP", "10HP", "5HP", "7HP" });
+            classes.Add(new List<string>() { "Attaque Spéciale :", " + 3PV ", " 2 dégats, - 1 PV sauf si ennemi défend = 1 dégât, - 1 PV", "Subit un dégat de moins et inflige autant qu'il subit + 1", " 3 dégâts et + 1 PV si ennemi défend, sinon 1 dégât" });
+            jeSAppelleGroot(classes, temp);
 
             SeparationLine();
-
 
             WriteLineC("Veuillez choisir une classe parmi les suivantes : ");
 
@@ -148,9 +156,7 @@ namespace Jeu_de_Combat
 
 
             //Clear, affiche "robert" et séparation
-            Console.Clear();
-            AfficheRobert();
-            SeparationLine();
+            ForceReload();
 
 
             // Si le niveau est tout sauf le dernier, on affiche les stats des deux joueurs
@@ -310,19 +316,19 @@ namespace Jeu_de_Combat
                         }
                         Thread.Sleep(1000);
 
-                        //Vérification de la validité de la saisie
+                        //Vérification de la validité de ça saisie
                         if (actjoueur == 0 || actjoueur == 1 || (nbTour == 24 && actjoueur == 24))
                         {
                             break;
                         }
                     }
 
-                    //Mise à la ligne, verification du dépassement, séparation
+                    //Mise à la ligne, verification du dépasement, séparation
                     Console.WriteLine();
                     TropEgalTrop(levelIA, pvJ, pvIA, PersoJ, PersoIA, coolDownJ, coolDownIA);
                     SeparationLine();
 
-                    //Fonction dédiée au texte personnalisé du mode histoire
+                    //Fonction dédier au texte personalisé du mode histoire
                     PaulineGod(ref nbTour, actjoueur, ref histoire);
 
                 }
@@ -352,7 +358,7 @@ namespace Jeu_de_Combat
                         coolDownIA = 0;
                     }
 
-                    //Calcul des dégâts du tour
+                    //Calcule des dégat du tour
                     Tuple<int, int> Damage = ResolutionAction(actjoueur, actIA, PersoJ, PersoIA, pvJ, pvIA);
 
 
@@ -391,13 +397,13 @@ namespace Jeu_de_Combat
 
             TropEgalTrop(levelIA, pvJ, pvIA, PersoJ, PersoIA, coolDownJ, coolDownIA);
 
-            //Appel de la fonction Result
+            //Apelle de la fonction Result
             Result(pvJ, pvIA, args);
 
         }
 
 
-        //Permet de calculer les dégâts subis pendant le tour
+        //Permet de calculé les dégat subie pendant le tour
         static Tuple<int, int> ResolutionAction(int actionJoueur, int actionIA, string PersoJ, string PersoIA, int pvJ, int pvIA)
         {
 
@@ -526,8 +532,232 @@ namespace Jeu_de_Combat
             return conv[choice];
         }
 
+        static string IaRandomChoice(List<string> options)
+        {
+            string IaChoice;
+
+            //Choix aléatoire
+            Random random = new Random();
+            int choixIA = random.Next(3);
+
+            //Retour de la valeur aléatoire
+            IaChoice = options[choixIA];
+            return IaChoice;
+        }
+
+
+        //Choix d'une action aléatoire par l'IA
+        static int IaActionRandom(int coolDown)
+        {
+            //Choix aléatoire
+            Random random = new Random();
+            int choixIA = 0;
+            if (coolDown < 3)
+            {
+                choixIA = random.Next(1, 3);
+            }
+            else
+            {
+                choixIA = random.Next(1, 4);
+            }
+            //Retour de la valeur aléatoire
+            return choixIA;
+        }
+
+        //Choix plus ou moins réfléchi de l'action pour l'IA || non. si. vraiment pas. c'est pas bien de se moquer. je me moque pas c'est pas vrai. ok elle est conne mais faut pas le dire. bah je le dirai pas alors. bien. waf. va bosser ||
+        static int IaActionFacile(List<int> action, string perso, int pvIA)
+        {
+            int IaChoiceFacile = 0;
+            string initialePerso = perso[0] + "";
+            Random random = new Random();
+
+            if (initialePerso == "D")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceFacile = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA < 3)
+                {
+                    if (random.Next(5) == 0)
+                    {
+                        IaChoiceFacile = action[0];
+                    }
+                    else
+                    {
+                        IaChoiceFacile = action[random.Next(1, 3)];
+                    }
+                }
+            }
+
+
+            if (initialePerso == "H")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceFacile = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA < 3)
+                {
+                    if (random.Next(5) == 0)
+                    {
+                        IaChoiceFacile = action[0];
+                    }
+                    else
+                    {
+                        IaChoiceFacile = action[random.Next(1, 3)];
+                    }
+                }
+            }
+
+            if (initialePerso == "T")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceFacile = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA < 3)
+                {
+                    if (random.Next(5) == 0)
+                    {
+                        IaChoiceFacile = action[0];
+                    }
+                    else
+                    {
+                        IaChoiceFacile = action[random.Next(1, 3)];
+                    }
+                }
+            }
+
+            if (initialePerso == "V")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceFacile = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA < 3)
+                {
+                    if (random.Next(5) == 0)
+                    {
+                        IaChoiceFacile = action[0];
+                    }
+                    else
+                    {
+                        IaChoiceFacile = action[random.Next(1, 3)];
+                    }
+                }
+            }
+
+            return IaChoiceFacile;
+
+        }
+
+        //Choix de l'action de l'IA la plus complexe et complete mis en place dans ce jeu
+        static int IaActionMedium(List<int> action, string perso, int pvIA, int pvJ)
+        {
+            int IaChoiceMedium = 0;
+            string initialePerso = perso[0] + "";
+            Random random = new Random();
+
+            //Choix de l'action si l'IA est une Damager
+            if (initialePerso == "D")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceMedium = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA < 3 && pvJ > 2)
+                {
+                    IaChoiceMedium = action[random.Next(1, 3)];
+                }
+                else
+                {
+                    IaChoiceMedium = action[0];
+                }
+            }
+
+            //Choix de l'action si l'IA est une Healer
+            if (initialePerso == "H")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceMedium = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA == 2 && pvJ > 1)
+                {
+                    IaChoiceMedium = action[random.Next(1, 3)];
+                }
+                else
+                {
+                    IaChoiceMedium = action[random.Next(0, 2) * 2];
+                }
+            }
+
+            //Choix de l'action si l'IA est une Tank
+            if (initialePerso == "T")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceMedium = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA <= 2 && pvJ <= 2)
+                {
+                    IaChoiceMedium = action[2];
+                }
+                else
+                {
+                    IaChoiceMedium = action[random.Next(0, 2)];
+                }
+            }
+
+            //Choix de l'action si l'IA est une Vampire
+            if (initialePerso == "V")
+            {
+                if (pvIA >= 3)
+                {
+                    IaChoiceMedium = action[random.Next(0, 2) * 2];
+                }
+
+                if (pvIA < 3 && pvJ > 2)
+                {
+                    IaChoiceMedium = action[random.Next(1, 3)];
+                }
+                else
+                {
+                    IaChoiceMedium = action[0];
+                }
+            }
+
+            return IaChoiceMedium;
+
+        }
+
+
+
         static void PaulineGod(ref int nbTour, int actjoueur, ref bool histoire)
         {
+
+            /*
+             Pour les if() suivants c'est la même chose à chaque fois
+             Si tu es là pour tricher et regarder la réponse dans le code
+             Ben casse toi
+             Mais si tu es la juste par curiosité alors assis toi et prépare toi pour une ribandelle d'explications.
+             Premièrement le code n'est pas opti.
+             Deuxièmement tous les if() sont necéssaires.
+             Et pour finir TOUT ce qui suit n'est quasiment que de l'affichage de texte scripté.
+             Bonne chance si tu veux tout lire.
+            */
+
+
+
+
             if (nbTour == 1)
             {
                 if (actjoueur == 1)
@@ -1465,6 +1695,66 @@ namespace Jeu_de_Combat
             histoire = false;
         }
 
+
+
+        //Attaque spéciale du Damager
+        static void SpeDamager(ref int degatSubisUtilisateur, ref int degatSubisDefenseur)
+        {
+            if (degatSubisUtilisateur < 0)
+            {
+                degatSubisDefenseur += degatSubisUtilisateur - 1;
+                degatSubisUtilisateur += 1;
+            }
+        }
+
+        //Attaque spéciale du Healer
+        static void SpeHealer(ref int DmgRecu, int pv)
+        {
+            if (pv <= 5)
+            {
+                DmgRecu += 3;
+            }
+            else if (pv == 6)
+            {
+                DmgRecu += 2;
+            }
+            else if (pv == 7)
+            {
+                DmgRecu += 1;
+            }
+        }
+
+        //Attaque spéciale du Tank
+        static void SpeTank(ref int vieUtilisateur, ref int vieDefenseur, int act)
+        {
+            if (act != 2)
+            {
+                vieUtilisateur -= 1;
+                vieDefenseur -= 2;
+            }
+            else
+            {
+                vieUtilisateur -= 1;
+                vieDefenseur -= 1;
+            }
+        }
+
+        //Attaque spéciale du Vampire
+        static void SpeVampire(ref int vieUtilisateur, ref int vieDefenseur, int act)
+        {
+            if (act == 2)
+            {
+                vieDefenseur -= 3;
+                vieUtilisateur += 1;
+            }
+            else
+            {
+                vieDefenseur -= 1;
+            }
+
+        }
+
+
         //Affiche les résultats de partie et relance le jeux au bon vouloir du joueur
         static void Result(int pvJ, int pvIA, string[] args)
         {
@@ -2093,28 +2383,180 @@ namespace Jeu_de_Combat
         }
 
         //Encore explicite, permet de mettre la ligne de séparation
-        //Je sais pas a quoi cela sert mais c'est Niloé qui s'en occupe
-        static void AffichageClasses(List<string> classe)
+        static void SeparationLine()
         {
-            Console.Write(@"╔");
-            foreach (string c in classe)
-            {
-                for (int u = 0; u < c.Length + 2; u++)
-                {
-                    Console.Write(@"═");
-                }
-                Console.Write(@"╦");
-            }
-            Console.WriteLine(@"╗");
+            //Change la couleur
+            Console.ForegroundColor = ConsoleColor.DarkGray;
 
+            //Boucle pour chaque colonne de la fenétre
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                //N'affiche rien pour les 20 premier pourcent de la fenétre, pareille pour les 20 dernier, entre les deux affiche "_"
+                if (i < Console.WindowWidth * 0.2 || i > Console.WindowWidth * 0.8)
+                {
+                    Console.Write(" ");
+                }
+                else
+                {
+                    Console.Write("_");
+                }
+            }
+            Console.WriteLine("\n");
+            Console.ResetColor();
+        }
+
+
+        static void jeSAppelleGroot(List<List<string>> classes, string temp)
+        {
+            int cols = 0;
+            List<int> maxlenscol = new List<int>();
+
+            foreach (List<string> tableau in classes)
+            {
+                if (tableau.Count > cols)
+                    cols = tableau.Count;
+            }
+            foreach (List<string> lines in classes)
+            {
+                if (lines.Count < cols)
+                {
+                    int nul = cols - lines.Count;
+                    for (int a = 0; a < nul; a++)
+                    {
+                        lines.Add("");
+                    }
+                }
+            }
+            for (int i = 0; i < cols; i++)
+            {
+                maxlenscol.Add(0);
+                for (int j = 0; j < classes.Count; j++)
+                {
+                    if (classes[j][i].Length > maxlenscol[i])
+                        maxlenscol[i] = classes[j][i].Length;
+                }
+            }
+
+
+            temp = "";
+            temp += @"╔";
+            foreach (int c in maxlenscol)
+            {
+                for (int u = 0; u < c + 2; u++)
+                {
+                    temp += @"═";
+                }
+                temp += @"╦";
+            }
+            WriteLineC(temp.Substring(0, temp.Length - 1) + @"╗");
+
+            foreach (List<string> liste in classes)
+            {
+                int r = 0;
+                temp = @"║";
+                foreach (string c in liste)
+                {
+                    string temp_ = "";
+                    int tempint = (maxlenscol[r] + 2 - c.Length) / 2;
+                    for (int z = 0; z < tempint; z++) { temp_ += " "; }
+                    temp_ += c;
+                    for (int z = 0; z < tempint; z++) { temp_ += " "; }
+                    if (temp_.Length < maxlenscol[r] + 2) { temp_ += " "; }
+                    temp += temp_ + @"║";
+                    r++;
+                }
+                WriteLineC(temp.Substring(0, temp.Length - 1) + @"║");
+            }
+
+            temp = @"╚";
+            foreach (int c in maxlenscol)
+            {
+                for (int u = 0; u < c + 2; u++)
+                {
+                    temp += @"═";
+                }
+                temp += @"╩";
+            }
+            WriteLineC(temp.Substring(0, temp.Length - 1) + @"╝");
+        }
+
+
+        //Nom explicite, permet d'afficher le tableau avec les stats dans le mode 0, 1 et 2
+        static void AfficheStats(string PersoJ, string PersoIA, string pvJ, string pvIA, int coolDownJ, int coolDownIA)
+        {
+            //Affiche premiere ligne avec gestion de la couleur
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.BackgroundColor = ConsoleColor.DarkGray;
+            WriteLineCChar("Robert", "IA", " | ", 1, true);
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            //Affiche les autres lignes du tableau
+            WriteLineCChar(PersoJ, PersoIA, " | ", 1, true);
+            WriteLineCChar("Classe : ", "", "", PersoJ.Length + 2, false);
+            WriteLineCChar(pvJ, pvIA, " | ", 1, true);
+            WriteLineCChar("PV : ", "", "", PersoJ.Length + 2, false);
+            WriteLineCChar(DommageParRole(PersoJ[0] + "") + "", DommageParRole(PersoIA[0] + "") + "", " | ", 1, true);
+            WriteLineCChar("Attaque : ", "", "", PersoJ.Length + 2, false);
+            WriteLineCChar(coolDownJ + "", coolDownIA + "", " | ", 1, true);
+            WriteLineCChar("MP : ", "", "", PersoJ.Length + 2, false);
+
+            //Reset la couleur
+            Console.ResetColor();
+        }
+
+
+        //Ré-affichage lorsque la console descend trop bas
+        static void TropEgalTrop(int levelIA, int pvJ, int pvIA, string PersoJ, string PersoIA, int coolDownJ, int coolDownIA)
+        {
+            //Check la ligne la plus basse écrite
+            if (Console.CursorTop + 10 > Console.WindowHeight)
+            {
+                //Clear et ré-affiche "Robert" 
+                Console.Clear();
+                AfficheRobert();
+                SeparationLine();
+
+
+                //Affiche les stats par rapport au mode de jeux selectionné
+                if (levelIA != 3)
+                {
+                    AfficheStats(PersoJ, PersoIA, pvJ + "", pvIA + "", coolDownJ, coolDownIA);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                    WriteLineCChar("Robert", "Pauline", " | ", 1, true);
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    WriteLineCChar(PersoJ, PersoIA, " | ", 1, true);
+                    WriteLineCChar("Classe : ", "", "", PersoJ.Length + 2, false);
+                    WriteLineCChar("1" + "", "???", " | ", 1, true);
+                    WriteLineCChar("PV : ", "", "", PersoJ.Length + 2, false);
+                    WriteLineCChar("1" + "", "???" + "", " | ", 1, true);
+                    WriteLineCChar("Attaque : ", "", "", PersoJ.Length + 2, false);
+
+                    Console.ResetColor();
+                }
+            }
+        }
+
+        static void ForceReload()
+        {
+            Console.Clear();
+            AfficheRobert();
+            SeparationLine();
         }
 
         //Utile pour l'affichage en plaine ecran au début de parti (importe l'API windows pour avoir la taille de l'écran)
+        #region "api_windows"
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
         private static IntPtr ThisConsole = GetConsoleWindow();
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         private const int MAXIMIZE = 3;
+        #endregion
     }
 }
