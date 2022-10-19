@@ -1,0 +1,15 @@
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\bin\Debug\net6.0\Jeu_de_Combat.exe
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\bin\Debug\net6.0\Jeu_de_Combat.deps.json
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\bin\Debug\net6.0\Jeu_de_Combat.runtimeconfig.json
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\bin\Debug\net6.0\Jeu_de_Combat.dll
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\bin\Debug\net6.0\Jeu_de_Combat.pdb
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.csproj.AssemblyReference.cache
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.AssemblyInfoInputs.cache
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.AssemblyInfo.cs
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.csproj.CoreCompileInputs.cache
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.dll
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\refint\Jeu_de_Combat.dll
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.pdb
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\Jeu_de_Combat.genruntimeconfig.cache
+C:\Users\niloe\OneDrive\Bureau\Dailys\projets_console\Jeu_de_Combat\Jeu_de_Combat\obj\Debug\net6.0\ref\Jeu_de_Combat.dll
