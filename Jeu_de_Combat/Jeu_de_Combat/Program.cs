@@ -105,17 +105,9 @@ namespace Jeu_de_Combat
                 }
             }
 
-            ForceReload();
-
-            Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight / 2 - 4);
-            List<List<string>> classes = new List<List<string>>();
-            classes.Add(new List<string>() { "Classes : ", "Healer", "Tank", "Damager", "Vampire" });
-            classes.Add(new List<string>() { "Attaque :", "1 dégât", "1 dégât", "2 dégâts", "2 dégâts" });
-            classes.Add(new List<string>() { "PV", "8HP", "10HP", "5HP", "7HP" });
-            classes.Add(new List<string>() { "Attaque Spéciale :", " + 3PV ", " 2 dégats, - 1 PV sauf si ennemi défend = 1 dégât, - 1 PV", "Subit un dégat de moins et inflige autant qu'il subit + 1", " 3 dégâts et + 1 PV si ennemi défend, sinon 1 dégât" });
-            jeSAppelleGroot(classes, temp);
 
             SeparationLine();
+
 
             WriteLineC("Veuillez choisir une classe parmi les suivantes : ");
 
@@ -156,7 +148,9 @@ namespace Jeu_de_Combat
 
 
             //Clear, affiche "robert" et séparation
-            ForceReload();
+            Console.Clear();
+            AfficheRobert();
+            SeparationLine();
 
 
             // Si le niveau est tout sauf le dernier, on affiche les stats des deux joueurs
@@ -316,19 +310,19 @@ namespace Jeu_de_Combat
                         }
                         Thread.Sleep(1000);
 
-                        //Vérification de la validité de ça saisie
+                        //Vérification de la validité de la saisie
                         if (actjoueur == 0 || actjoueur == 1 || (nbTour == 24 && actjoueur == 24))
                         {
                             break;
                         }
                     }
 
-                    //Mise à la ligne, verification du dépasement, séparation
+                    //Mise à la ligne, verification du dépassement, séparation
                     Console.WriteLine();
                     TropEgalTrop(levelIA, pvJ, pvIA, PersoJ, PersoIA, coolDownJ, coolDownIA);
                     SeparationLine();
 
-                    //Fonction dédier au texte personalisé du mode histoire
+                    //Fonction dédiée au texte personnalisé du mode histoire
                     PaulineGod(ref nbTour, actjoueur, ref histoire);
 
                 }
@@ -358,7 +352,7 @@ namespace Jeu_de_Combat
                         coolDownIA = 0;
                     }
 
-                    //Calcule des dégat du tour
+                    //Calcul des dégâts du tour
                     Tuple<int, int> Damage = ResolutionAction(actjoueur, actIA, PersoJ, PersoIA, pvJ, pvIA);
 
 
@@ -397,13 +391,13 @@ namespace Jeu_de_Combat
 
             TropEgalTrop(levelIA, pvJ, pvIA, PersoJ, PersoIA, coolDownJ, coolDownIA);
 
-            //Apelle de la fonction Result
+            //Appel de la fonction Result
             Result(pvJ, pvIA, args);
 
         }
 
 
-        //Permet de calculé les dégat subie pendant le tour
+        //Permet de calculer les dégâts subis pendant le tour
         static Tuple<int, int> ResolutionAction(int actionJoueur, int actionIA, string PersoJ, string PersoIA, int pvJ, int pvIA)
         {
 
@@ -501,7 +495,1178 @@ namespace Jeu_de_Combat
             return charactersDM[role];
         }
 
-        
+
+        //Choix du Joueur pour la classe
+        static string PlayerChoice(List<string> options, Dictionary<string, string> conv)
+        {
+            List<string> opt = new List<string>();
+            foreach (var option in options)
+            {
+                opt.Add(option[0] + "");
+            }
+
+            // Initialisation des variables pour le choix du joueur et la boucle
+            string choice;
+
+            // Boucle Tant que le choix ne correspond a aucunes des options, redemander un choix valable de classe
+            while (true)
+            {
+                // Lecture du choix du joueur
+                choice = Console.ReadLine();
+
+                // Si le choix correspond à l'une des options, casser la boucle
+                if (opt.Contains(choice))
+                    break;
+                Console.ForegroundColor = ConsoleColor.Red;
+                WriteLineC("Veuillez entrer une classe existante");
+                Console.ResetColor();
+                WriteF();
+            }
+            // On retourne le choix du joueur
+            return conv[choice];
+        }
+
+        static void PaulineGod(ref int nbTour, int actjoueur, ref bool histoire)
+        {
+            if (nbTour == 1)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous bloquez avec succès la première attaque de la déesse Pauline.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    WriteLineC("Vous êtes la clé.");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 2)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("La déesse Pauline semble perdue dans ses pensées.");
+                    WriteLineC("Vous en profitez pour lui asséner un coup. -2PV");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 3)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline n'a pas aimé le coup que vous lui avez donné, elle vous attaque.");
+                    WriteLineC("Heureusement, vous avez eu la lucidité de défendre l'attaque. Pour cette fois.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 4)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous attaquez la déesse, mais elle esquive en effectuant une magnifique roue.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    WriteLineC("N'oubliez pas, vous êtes la clé.");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 5)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline réagit à votre précédente attaque, mais doit s'arrêter à cause d'un hérisson entre vous deux.");
+                    WriteLineC("L'équipe de secours l'a transféré en dehors de l'arène.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 6)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous vous mettez en boule tandis que Pauline vous assène un giga high kick de la mort.");
+                    WriteLineC("Belle défense.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    WriteLineC("Dans un monde où seules deux valeurs existent, vous êtes roi.");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 7)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous attaquez la déesse et la touchez, lui infligeant une belle gifle ! -0,5PV");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 8)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline vous invite à danser, ce que vous refusez intelligemment.");
+                    WriteLineC("Ce n'était qu'une astuce pour vous faire marcher dans un piège à loup.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    WriteLineC("Ce n'est qu'une succession de motifs.");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 9)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Rageuse de son plan découvert, Pauline vous attaque.");
+                    WriteLineC("Mais vous avez vu Matrix plus d'une fois dans votre vie, vous esquivez.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 10)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pendant que votre adversaire rumine de rage vous en profitez pour lui lancer un panier de pommes.");
+                    WriteLineC("C'est une façon comme une autre de se débarrasser d'une déesse.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    WriteLineC("Vous avez trouvé la réponse ?");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 11)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline est tombée dans les pommes, l'occasion pour vous de lui marcher sur le pied ! -4PV");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 12)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous levez votre bouclier, juste avant de vous rappeler que vous n'en aviez pas.");
+                    WriteLineC("Heureusement, Pauline éclate de rire et en oublie d'attaquer.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    WriteLineC("Un jeu est rempli d'informations, un écran aussi.");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 13)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pendant que Pauline essuie ses larmes de joie, vous vous vengez en tentant lui lancer une malédiction.");
+                    WriteLineC("Cela échoue.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 14)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous tentez alors de l'attaquer de front, mais les profs de Coding Room rappliquent et prennent les coups pour elle.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 15)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous décidez de la confronter au pierre-feuille-ciseau.");
+                    WriteLineC("Cependant, à la première manche, elle sort le puit.");
+                    WriteLineC("C'est un échec cuisant.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 16)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Honteux de vos multiples échecs, vous déprimez et arrêtez d'attaquer pour ce tour.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 17)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous décidez de prendre une pause café, esquivant automatiquement l'attaque de Pauline.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 18)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Remis d'aplomb et la confiance gonflée à bloc, vous attaquez Pauline alors qu'elle n'était pas prête.");
+                    WriteLineC("Pas très fair play, mais l'attaque fait mouche. -5PV");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 19)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous ne vous arrêtez pas là et réattaquez, malheureusement vous n'êtes pas doué et ratez la déesse.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 20)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Epuisé, vous vous écroulez, Pauline n'avait pas prévu cela et rate son attaque.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 21)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline profite de votre temps au sol pour retenter une attaque, mais vous lui sortez la reverse card.");
+                    WriteLineC("Elle se prend sa propre attaque. -200 PV pour Pauline !");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 22)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous vous relevez mais trébuchez, ce qui vous permet d'esquiver une attaque létale de votre adversaire.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 23)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("En vous relevant, vous mettez un coup de tête non intentionnel à la déesse, lui infligeant -3 PV.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    WriteLineC("Cela fait longtemps que vous vous battez et si vous ne faites pas le bon choix au prochain tour, on ne pourrait en être qu'à la moitié du combat !");
+                    WriteLineC("Après tout ce n'est qu'une option sur une infinité.");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 24)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else if (actjoueur == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline vous attaque :");
+                    WriteLineC("\"le signe infini est le plus grand chiffre du monde !\"");
+                    WriteLineC("Vous vous défendez en argumentant :");
+                    WriteLineC("\"Et infini + 1 ?\"");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else if (actjoueur == 24)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    WriteLineC("Vous annoncez à Pauline que vous avez quelque chose à lui dire.");
+                    WriteLineC("Attaquez !");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                    nbTour = 46;
+                }
+            }
+
+            if (nbTour == 25)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Après cet argument imparable, Pauline préfère la bonne vieille méthode d'attaque de front.");
+                    WriteLineC("Mais vous parez l'attaque grâce à vos souvenirs de cours d'arts martiaux d'il y a 10 ans.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 26)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("C'est à votre tour d'attaquer, vous sentez l'âme de Jackie Chan en vous, et faites un enchainement d'attaques assez convainvant.");
+                    WriteLineC("Dommage que cela se finisse sur un pantalon craqué et un changement honteux dans l'arène.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 27)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous avez maintenant un pantalon de meilleure qualité, vous recommencez votre combo et touchez Pauline plusieurs fois ! -4PV -3PV -4PV -5PV");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 28)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous vous attendez à une contre attaque de Pauline et défendez.");
+                    WriteLineC("En effet, vous vous faites attaquer.");
+                    WriteLineC("Par une mouche.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 29)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Cette fois c'est Pauline qui attaque, mais vous esquivez en voulant écraser cette satanée mouche.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 30)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("En vous retournant, triomphant de cette victoire contre la mouche, vous voyez Pauline de dos et en profitez pour l'attaquer. -5PV");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 31)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline se retourne habilement et vous assène une attaque circulaire que vous esquivez en sautant par dessus !");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 32)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous envoyez en retour une attaque circulaire, mais la déesse l'esquive en voulant ramasser une magnifique rose laissée au sol de l'arène.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 33)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous défendez un lancer de rose pleine d'épines, ça pique mais c'est pas fatal.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 34)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Une course s'engage entre vous et votre adversaire.");
+                    WriteLineC("Vous ne courrez pas très vite...");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 35)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline n'a aucun mal à vous distancer,");
+                    WriteLineC("vous jouez donc le tout pour le tout et lui lancez un caillou à la tête.");
+                    WriteLineC("Malheureusement, vous n'avez pas fait lancer de cailloux au lycée, vous ratez.");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 36)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("C'est encore un échec, et en plus vous êtes essouflé,");
+                    WriteLineC("pas la peine de tente une attaque ce tour,");
+                    WriteLineC("cela résulterait à un moment génant.");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 37)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Le temps de vous reposer,");
+                    WriteLineC("vous vous contentez de défendre les attaques de Pauline,");
+                    WriteLineC("beaucoup plus entrainée que vous. Belle esquive !");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 38)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Le temps de défendre une nouvelle attaque de la déesse,");
+                    WriteLineC("vous vous dites que ce combat n'a que trop duré,");
+                    WriteLineC("il faudrai y mettre un terme bientôt.");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 39)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous avez récupéré votre énergie,");
+                    WriteLineC("et attaquez vigoureusement Pauline,");
+                    WriteLineC("l'attaque touche ! -10PV");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 40)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline contre attaque mais vous faites une magnifique esquive, c'est raté !");
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 41)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous vous défendez contre une nouvelle attaque de votre adversaire par une magnifique parade,");
+                    WriteLineC("vous auriez enfin gagné un peu d'habileté ?");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 42)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous contre attaquez mais n'arrivez pas à toucher Pauline alors qu'elle ne bougeait pas.");
+                    WriteLineC("Vous n'avez définitivement pas gagné en habileté...");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 43)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pendant que Pauline se moque de votre raté plutôt ridicule,");
+                    WriteLineC("vous relancez une attaque mais impossible de la toucher.");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 44)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Vous ne lachez rien et l'attaquez de nouveau,");
+                    WriteLineC("je ne vous dis pas la suite,");
+                    WriteLineC("c'est pas beau à voir.");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 45)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline en a marre de ce combat,");
+                    WriteLineC("se battre contre un clown comme vous commence à être lassant.");
+                    WriteLineC("Par un effort exceptionnel (ou une chance),");
+                    WriteLineC("vous esquivez une attaque qui vous aurait été sûrement fatale.");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : ???");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 46)
+            {
+                if (actjoueur == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Il vous vient une idée exceptionnelle,");
+                    WriteLineC("vous annoncez à Pauline que vous avez trouvé une alternance !");
+                    WriteLineC("La nouvelle la laisse sans voix et la laisse à un PV !");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : 1");
+                    Console.ResetColor();
+                }
+                else if (actjoueur == 0)
+                {
+                    //Mort
+                    RobertLooseDefense(ref histoire);
+                }
+            }
+
+            if (nbTour == 47)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Pauline n'ayant plus de vie,");
+                    WriteLineC("elle enrage et vous attaque de toutes ses forces,");
+                    WriteLineC("vous vous prépariez à défendre quand un pigeon passa devant vous");
+                    WriteLineC("et prit tous les dégâts à votre place.");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : 1");
+                    Console.ResetColor();
+                }
+            }
+
+            if (nbTour == 48)
+            {
+                if (actjoueur == 1)
+                {
+                    //Mort
+                    RobertLooseAttaque(ref histoire);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    WriteLineC("Alors qu'elle s'avance pour en finir,");
+                    WriteLineC("la déesse de toute chose marche sur une épine que le hérisson avait laissé au début,");
+                    WriteLineC("traversant son talon et lui retira son point de vie restant.");
+                    WriteLineC("Pas de chance, c'était son talon de Pauline.");
+
+                    WriteLineC("PV de Robert : 1");
+                    WriteLineC("PV de Déesse Pauline : 1");
+                    Thread.Sleep(10000);
+                    Console.ResetColor();
+                    RobertVictory(ref histoire);
+                }
+            }
+        }
+
+        //Fonction de défaite dans le mode histoire lorsqu'on défend alors qu'il falait attaquer (c'etait pourtant évidant)
+        static void RobertLooseDefense(ref bool histoire)
+        {
+            Bordel();
+            AfficheDefaite();
+            AfficheRobert();
+            SeparationLine();
+            WriteLineC("Vous vous êtes mis en position de défense, mais avez attendu un peu trop longtemps alors que Pauline était juste partie chercher des orchidées. Vous êtes mort d'ennui.");
+            Thread.Sleep(1000);
+            histoire = false;
+        }
+
+        //Fonction de défaite dans le mode histoire lorsqu'on attaque alors qu'il falait défendre (bolosse)
+        static void RobertLooseAttaque(ref bool histoire)
+        {
+            Bordel();
+            AfficheDefaite();
+            AfficheRobert();
+            SeparationLine();
+            Random random = new Random();
+            if (random.Next(2) == 0)
+            {
+                WriteLineC("Vous n'avez pas été assez prudent, Pauline vous a massacré à coup de Coding Room ! Vous avez perdu !");
+            }
+            else
+            {
+                WriteLineC("Vous avancez sans faire attention où vous marchez, vous vous noyez dans un océan de code. Vous avez perdu !");
+            }
+            Thread.Sleep(1000);
+            histoire = false;
+        }
+
+        //Fonction de victoire dans le mode histoire 
+        static void RobertVictory(ref bool histoire)
+        {
+            AfficheVictoire();
+            AfficheRobert();
+            SeparationLine();
+            histoire = false;
+        }
+
+        //Affiche les résultats de partie et relance le jeux au bon vouloir du joueur
+        static void Result(int pvJ, int pvIA, string[] args)
+        {
+
+
+            //Appelle la fonction correspondant au resultat et affiche un message
+            if (pvJ <= 0 && pvIA <= 0)
+            {
+                AfficheEgalité();
+                Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight / 2);
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                SeparationLine();
+                WriteLineC("Vous avez tous les deux perdu tout vos points de vie, c'est une égalité !");
+                Console.ResetColor();
+                SeparationLine();
+            }
+            if (pvJ <= 0 && pvIA > 0)
+            {
+                AfficheDefaite();
+                Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight / 2);
+                Console.ForegroundColor = ConsoleColor.Red;
+                SeparationLine();
+                WriteLineC("Vous n'avez plus aucun point de vie, vous avez perdu le combat !");
+                Console.ResetColor();
+                SeparationLine();
+            }
+            if (pvIA <= 0 && pvJ > 0)
+            {
+                AfficheVictoire();
+                Console.SetCursorPosition(Console.CursorLeft, Console.WindowHeight / 2);
+                Console.ForegroundColor = ConsoleColor.Green;
+                SeparationLine();
+                WriteLineC("L'ordinateur n'a plus de point de vie, vous avez donc gagné le combat !");
+                Console.ResetColor();
+                SeparationLine();
+            }
+
+            // Demande au joueur si il veut rejouer (ou pas)
+            // Si il ne veut pas rejouer, on redemande juste 2-3 fois afin d'être sur qu'il veuille s'arrêter
+            while (true)
+            {
+                WriteLineC("Voulez-vous refaire un combat ?");
+                WriteLineC("o - Oui");
+                WriteLineC("n - Non");
+                WriteF();
+                string play = Console.ReadLine();
+                if (play == "o")
+                {
+                    WriteLineC("C'est repartiiii !");
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                    Main(args);
+                }
+                if (play == "n")
+                {
+                    while (true)
+                    {
+                        Thread.Sleep(500);
+                        SeparationLine();
+                        WriteLineC("Êtes-vous sur de vouloir vous arrêter ?");
+                        WriteLineC("o - Oui");
+                        WriteLineC("n - Non");
+                        WriteF();
+                        play = Console.ReadLine();
+                        if (play == "o")
+                        {
+                            while (true)
+                            {
+                                Thread.Sleep(500);
+                                SeparationLine();
+                                WriteLineC("Vous en êtes réellement sur ?");
+                                WriteLineC("o - Oui");
+                                WriteLineC("n - Non");
+                                WriteF();
+                                play = Console.ReadLine();
+                                if (play == "o")
+                                {
+                                    while (true)
+                                    {
+                                        Thread.Sleep(500);
+                                        SeparationLine();
+                                        WriteLineC("Vous savez, il n'y a pas de honte à ne pas savoir. Dites-moi honnêtement, voulez-vous partir ?");
+                                        WriteLineC("o - Oui");
+                                        WriteLineC("n - Non");
+                                        WriteF();
+                                        play = Console.ReadLine();
+                                        if (play == "o")
+                                        {
+                                            Thread.Sleep(500);
+                                            SeparationLine();
+                                            WriteLineC("Bon, j'imagine que je n'ai pas le choix de vous laisser partir...");
+                                            while (true)
+                                            {
+                                                Thread.Sleep(3000);
+                                                SeparationLine();
+                                                WriteLineC("Non parce que moi une fois j'ai eu un ami qui voulait partir du cinéma et au final il a changé d'avis hein !");
+                                                WriteLineC("C'est votre dernier mot ?");
+                                                WriteLineC("o - Oui");
+                                                WriteLineC("n - Non");
+                                                WriteF();
+                                                play = Console.ReadLine();
+                                                if (play == "o")
+                                                {
+                                                    Thread.Sleep(500);
+                                                    SeparationLine();
+                                                    WriteLineC("Bon, d'accord... De toute façon le prochain Robert sera le meilleur.");
+                                                    break;
+                                                }
+                                                if (play == "n")
+                                                {
+                                                    SeparationLine();
+                                                    WriteLineC("Ça veut dire que vous voulez rester ou vous n'avez juste pas encore choisi ?");
+                                                    WriteLineC("o - Oui");
+                                                    WriteLineC("n - Non");
+                                                    WriteF();
+                                                    Thread.Sleep(5000);
+                                                    SeparationLine();
+                                                    WriteLineC("HAHAHA je vous ai bien eu hein ? Vous ne saviez pas quoi répondre ? Bon appuyez sur entrée pour relancer.");
+                                                    WriteF();
+                                                    Console.ReadLine();
+                                                    Console.Clear();
+                                                    Main(args);
+                                                }
+                                                if (play != "o" && play != "n")
+                                                {
+                                                    SeparationLine();
+                                                    Console.ForegroundColor = ConsoleColor.Red;
+                                                    WriteLineC("Veuillez entrer un réponse valide Robert.");
+                                                    Console.ResetColor();
+                                                    continue;
+                                                }
+                                                break;
+                                            }
+                                            break;
+                                        }
+                                        if (play == "n")
+                                        {
+                                            SeparationLine();
+                                            WriteLineC("Je savais bien que vous ne pouviez résister au Robert Game !");
+                                            Console.Clear();
+                                            Main(args);
+                                        }
+                                        if (play != "o" && play != "n")
+                                        {
+                                            SeparationLine();
+                                            Console.ForegroundColor = ConsoleColor.Red;
+                                            WriteLineC("Veuillez entrer un réponse valide Robert.");
+                                            Console.ResetColor();
+                                            continue;
+                                        }
+                                    }
+                                    break;
+                                }
+                                if (play == "n")
+                                {
+                                    SeparationLine();
+                                    WriteLineC("Je savais bien que vous ne pouviez résister au Robert Game !");
+                                    Console.Clear();
+                                    Main(args);
+                                }
+                                if (play != "o" && play != "n")
+                                {
+                                    SeparationLine();
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    WriteLineC("Veuillez entrer un réponse valide Robert.");
+                                    Console.ResetColor();
+                                    continue;
+                                }
+                            }
+                            break;
+                        }
+                        if (play == "n")
+                        {
+                            SeparationLine();
+                            WriteLineC("Je savais bien que vous ne pouviez résister au Robert Game !");
+                            Console.Clear();
+                            Main(args);
+                        }
+                        if (play != "o" && play != "n")
+                        {
+                            SeparationLine();
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            WriteLineC("Veuillez entrer un réponse valide Robert.");
+                            Console.ResetColor();
+                            continue;
+                        }
+                    }
+                    break;
+                }
+                if (play != "o" && play != "n")
+                {
+                    SeparationLine();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    WriteLineC("Veuillez entrer un réponse valide Robert.");
+                    Console.ResetColor();
+                    continue;
+                }
+            }
+        }
+
+
+
         //Affiche les trains d'égalité
         static void AfficheEgalité()
         {
@@ -927,157 +2092,29 @@ namespace Jeu_de_Combat
             Console.WriteLine(txtB);
         }
 
-        static void jeSAppelleGroot(List<List<string>> classes, string temp)
+        //Encore explicite, permet de mettre la ligne de séparation
+        //Je sais pas a quoi cela sert mais c'est Niloé qui s'en occupe
+        static void AffichageClasses(List<string> classe)
         {
-            int cols = 0;
-            List<int> maxlenscol = new List<int>();
-
-            foreach (List<string> tableau in classes)
+            Console.Write(@"╔");
+            foreach (string c in classe)
             {
-                if (tableau.Count > cols)
-                    cols = tableau.Count;
-            }
-            foreach (List<string> lines in classes)
-            {
-                if (lines.Count < cols)
+                for (int u = 0; u < c.Length + 2; u++)
                 {
-                    int nul = cols - lines.Count;
-                    for (int a = 0; a < nul; a++)
-                    {
-                        lines.Add("");
-                    }
+                    Console.Write(@"═");
                 }
+                Console.Write(@"╦");
             }
-            for (int i = 0; i < cols; i++)
-            {
-                maxlenscol.Add(0);
-                for (int j = 0; j < classes.Count; j++)
-                {
-                    if (classes[j][i].Length > maxlenscol[i])
-                        maxlenscol[i] = classes[j][i].Length;
-                }
-            }
+            Console.WriteLine(@"╗");
 
-
-            temp = "";
-            temp += @"╔";
-            foreach (int c in maxlenscol)
-            {
-                for (int u = 0; u < c + 2; u++)
-                {
-                    temp += @"═";
-                }
-                temp += @"╦";
-            }
-            WriteLineC(temp.Substring(0, temp.Length - 1) + @"╗");
-
-            foreach (List<string> liste in classes)
-            {
-                int r = 0;
-                temp = @"║";
-                foreach (string c in liste)
-                {
-                    string temp_ = "";
-                    int tempint = (maxlenscol[r] + 2 - c.Length) / 2;
-                    for (int z = 0; z < tempint; z++) { temp_ += " "; }
-                    temp_ += c;
-                    for (int z = 0; z < tempint; z++) { temp_ += " "; }
-                    if (temp_.Length < maxlenscol[r] + 2) { temp_ += " "; }
-                    temp += temp_ + @"║";
-                    r++;
-                }
-                WriteLineC(temp.Substring(0, temp.Length - 1) + @"║");
-            }
-
-            temp = @"╚";
-            foreach (int c in maxlenscol)
-            {
-                for (int u = 0; u < c + 2; u++)
-                {
-                    temp += @"═";
-                }
-                temp += @"╩";
-            }
-            WriteLineC(temp.Substring(0, temp.Length - 1) + @"╝");
-        }
-
-
-        //Nom explicite, permet d'afficher le tableau avec les stats dans le mode 0, 1 et 2
-        static void AfficheStats(string PersoJ, string PersoIA, string pvJ, string pvIA, int coolDownJ, int coolDownIA)
-        {
-            //Affiche premiere ligne avec gestion de la couleur
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.BackgroundColor = ConsoleColor.DarkGray;
-            WriteLineCChar("Robert", "IA", " | ", 1, true);
-            Console.BackgroundColor = ConsoleColor.Black;
-
-            //Affiche les autres lignes du tableau
-            WriteLineCChar(PersoJ, PersoIA, " | ", 1, true);
-            WriteLineCChar("Classe : ", "", "", PersoJ.Length + 2, false);
-            WriteLineCChar(pvJ, pvIA, " | ", 1, true);
-            WriteLineCChar("PV : ", "", "", PersoJ.Length + 2, false);
-            WriteLineCChar(DommageParRole(PersoJ[0] + "") + "", DommageParRole(PersoIA[0] + "") + "", " | ", 1, true);
-            WriteLineCChar("Attaque : ", "", "", PersoJ.Length + 2, false);
-            WriteLineCChar(coolDownJ + "", coolDownIA + "", " | ", 1, true);
-            WriteLineCChar("MP : ", "", "", PersoJ.Length + 2, false);
-
-            //Reset la couleur
-            Console.ResetColor();
-        }
-
-
-        //Ré-affichage lorsque la console descend trop bas
-        static void TropEgalTrop(int levelIA, int pvJ, int pvIA, string PersoJ, string PersoIA, int coolDownJ, int coolDownIA)
-        {
-            //Check la ligne la plus basse écrite
-            if (Console.CursorTop + 10 > Console.WindowHeight)
-            {
-                //Clear et ré-affiche "Robert" 
-                Console.Clear();
-                AfficheRobert();
-                SeparationLine();
-
-
-                //Affiche les stats par rapport au mode de jeux selectionné
-                if (levelIA != 3)
-                {
-                    AfficheStats(PersoJ, PersoIA, pvJ + "", pvIA + "", coolDownJ, coolDownIA);
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    WriteLineCChar("Robert", "Pauline", " | ", 1, true);
-                    Console.BackgroundColor = ConsoleColor.Black;
-
-                    WriteLineCChar(PersoJ, PersoIA, " | ", 1, true);
-                    WriteLineCChar("Classe : ", "", "", PersoJ.Length + 2, false);
-                    WriteLineCChar("1" + "", "???", " | ", 1, true);
-                    WriteLineCChar("PV : ", "", "", PersoJ.Length + 2, false);
-                    WriteLineCChar("1" + "", "???" + "", " | ", 1, true);
-                    WriteLineCChar("Attaque : ", "", "", PersoJ.Length + 2, false);
-
-                    Console.ResetColor();
-                }
-            }
-        }
-
-        static void ForceReload()
-        {
-            Console.Clear();
-            AfficheRobert();
-            SeparationLine();
         }
 
         //Utile pour l'affichage en plaine ecran au début de parti (importe l'API windows pour avoir la taille de l'écran)
-        #region "api_windows"
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
         private static IntPtr ThisConsole = GetConsoleWindow();
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         private const int MAXIMIZE = 3;
-        #endregion
     }
 }

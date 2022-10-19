@@ -8,23 +8,23 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Raph6\\.nuget\\packages\\": {},
+    "C:\\Users\\Gaetan\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Raph6\\Source\\Repos\\usrs46\\Jeu_de_Combat\\Jeu_de_Combat\\Jeu_de_Combat.csproj",
+      "projectUniqueName": "C:\\Users\\Gaetan\\Source\\Repos\\usrs46\\Jeu_de_Combat\\Jeu_de_Combat\\Jeu_de_Combat.csproj",
       "projectName": "Jeu_de_Combat",
-      "projectPath": "C:\\Users\\Raph6\\Source\\Repos\\usrs46\\Jeu_de_Combat\\Jeu_de_Combat\\Jeu_de_Combat.csproj",
-      "packagesPath": "C:\\Users\\Raph6\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Raph6\\Source\\Repos\\usrs46\\Jeu_de_Combat\\Jeu_de_Combat\\obj\\",
+      "projectPath": "C:\\Users\\Gaetan\\Source\\Repos\\usrs46\\Jeu_de_Combat\\Jeu_de_Combat\\Jeu_de_Combat.csproj",
+      "packagesPath": "C:\\Users\\Gaetan\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Gaetan\\Source\\Repos\\usrs46\\Jeu_de_Combat\\Jeu_de_Combat\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Raph6\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Gaetan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -56,17 +56,11 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
-          }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.412\\RuntimeIdentifierGraph.json"
       }
     }
   }
